@@ -14,7 +14,7 @@ namespace {
         }
 
         std::string id_range;
-        long result;
+        long result = 0;
 
         while (std::getline(file, id_range, ',')) {
             int split = id_range.find('-');
@@ -26,7 +26,7 @@ namespace {
                 std::string str = std::to_string(i);
                 int len = str.length();
 
-                fn(str, len, i, result);
+                fn(str, i, result);
             }
         }
 
@@ -36,26 +36,30 @@ namespace {
 
 std::optional<long> part_one(const std::string& filename) {
     return process_file(filename,
-        [](const std::string& str, int len, long& i, long& result) {
+        [](const std::string_view str, long value, long& result) {
+            size_t len = str.size();
+
             if (str.substr(0, len / 2) == str.substr(len / 2))
-                result += i;
+                result += value;
         });
 }
 
 std::optional<long> part_two(const std::string& filename) {
     return process_file(filename,
-        [](const std::string& str, int len, long& i, long& result) {
-            for (int x = 1; x <= len / 2; ++x) {
+        [](const std::string_view str, long value, long& result) {
+            size_t len = str.size();
+
+            for (size_t x = 1; x <= len / 2; ++x) {
                 if (len % x != 0)
                     continue;
 
-                const std::string first_substr = str.substr(0, x);
-                for (int y = 1; y < len / x; ++y) {
-                    if (first_substr != str.substr(y * x, x))
+                const std::string_view first_substr = str.substr(0, x);
+                for (size_t y = x; y < len; y += x) {
+                    if (first_substr != str.substr(y, x))
                         break; 
 
                     if (y == len / x - 1) {
-                        result += i;
+                        result += value;
                         return;
                     }
                 }
