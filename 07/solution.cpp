@@ -28,17 +28,28 @@ namespace {
 
         for (auto quantum_beam : input_quantum_space) {
             if (input[quantum_beam.first] == '^') {
-                if (output_quantum_space.find(quantum_beam.first - 1) == output_quantum_space.end())
-                    output_quantum_space.emplace(quantum_beam.first - 1, quantum_beam.second);
-                else
-                    output_quantum_space[quantum_beam.first - 1] += quantum_beam.second;
+                if (output_quantum_space.find(quantum_beam.first - 1) == output_quantum_space.end()) {
+                    long quantum_pathways = quantum_beam.second;
+                    if (input_quantum_space.find(quantum_beam.first - 1) == input_quantum_space.end())
+                        quantum_pathways += input_quantum_space[quantum_beam.first - 1];
 
-                if (output_quantum_space.find(quantum_beam.first + 1) == output_quantum_space.end())
-                    output_quantum_space.emplace(quantum_beam.first + 1, quantum_beam.second);
-                else
+                    output_quantum_space.emplace(quantum_beam.first - 1, quantum_pathways);
+                } else
+                    output_quantum_space[quantum_beam.first - 1] += quantum_beam.second;
+                
+                if (output_quantum_space.find(quantum_beam.first + 1) == output_quantum_space.end()) {
+                    long quantum_pathways = quantum_beam.second;
+                    if (input_quantum_space.find(quantum_beam.first + 1) == input_quantum_space.end())
+                        quantum_pathways += input_quantum_space[quantum_beam.first + 1];
+
+                    output_quantum_space.emplace(quantum_beam.first + 1, quantum_pathways);
+                } else
                     output_quantum_space[quantum_beam.first + 1] += quantum_beam.second;
             } else {
-                output_quantum_space.insert(quantum_beam);
+                if (output_quantum_space.find(quantum_beam.first) == output_quantum_space.end())
+                    output_quantum_space.emplace(quantum_beam.first, quantum_beam.second);
+                else
+                    output_quantum_space[quantum_beam.first] += quantum_beam.second;
             }
         }
 
