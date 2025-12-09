@@ -15,7 +15,7 @@ namespace {
         return c == '@' || c == 'X';
     }
 
-    void clean_grid(std::vector<std::string> grid) {
+    void clean_grid(std::vector<std::string>& grid) {
         for (size_t i = 0; i < grid.size(); ++i) {
             for (size_t j = 0; j < grid[i].size(); ++j) {
                 if (grid[i][j] == 'X')
@@ -40,7 +40,7 @@ namespace {
         return grid;
     }
 
-    int find_reachable_rolls(std::vector<std::string> grid) {
+    int find_reachable_rolls(std::vector<std::string>& grid) {
         int result = 0;
 
         std::pair<int, int> offsets[] = {
